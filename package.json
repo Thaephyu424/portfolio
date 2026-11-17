@@ -1,0 +1,17 @@
+{
+  "name": "my-portfolio",
+  "version": "1.0.0",
+  "description": "Personal portfolio - Software Engineer & AI Developer",
+  "scripts": {
+    "build:css": "tailwindcss -i static/css/input.css -o static/css/tailwind.css --minify",
+    "watch:css": "tailwindcss -i static/css/input.css -o static/css/tailwind.css --watch",
+    "build:ts": "tsc -p tsconfig.json",
+    "build": "npm run build:css && npm run build:ts"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "@types/three": "^0.160.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2"
+  }
+}

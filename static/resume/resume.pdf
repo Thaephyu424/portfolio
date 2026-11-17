@@ -1,0 +1,66 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /Font1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> /Font2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> >> >> >>
+endobj
+4 0 obj
+<< /Length 3182 >>
+stream
+0.22 0.74 0.97 rg 540 732 -468 36 re f 0 g
+BT /F2 24 Tf 72 684 Td (ALEX RIVERA) Tj ET
+BT /F1 11 Tf 72 664 Td (Software Engineer & AI Developer  |  San Francisco, CA) Tj ET
+BT /F1 10 Tf 72 646 Td (hello@alexrivera.dev  |  github.com/alexrivera  |  linkedin.com/in/alexrivera) Tj ET
+0.85 G 1.2 w 72 630 m 540 630 l S
+BT /F2 12 Tf 72 600 Td (SUMMARY) Tj ET
+BT /F1 10 Tf 72 580 Td (Software engineer with 6+ years of experience building production web applications and) Tj ET
+BT /F1 10 Tf 72 566 Td (machine learning systems. Specialized in Python/Flask backends, TypeScript frontends,) Tj ET
+BT /F1 10 Tf 72 552 Td (and LLM/RAG pipelines serving millions of daily requests.) Tj ET
+BT /F2 12 Tf 72 518 Td (EXPERIENCE) Tj ET
+BT /F2 10.5 Tf 72 498 Td (Senior Software Engineer - AI Platform, Nexlo Labs) Tj ET
+BT /F1 9.5 Tf 72 484 Td (2023 - Present) Tj ET
+BT /F1 10 Tf 72 468 Td (- Lead the AI platform team; shipped an internal LLM gateway used by 200+ engineers.) Tj ET
+BT /F1 10 Tf 72 454 Td (- Cut model inference costs 38% via batching, quantization, and smart routing.) Tj ET
+BT /F1 10 Tf 72 440 Td (- Mentor 4 engineers; own the hiring loop for ML infrastructure roles.) Tj ET
+BT /F2 10.5 Tf 72 414 Td (Software Engineer, Cavella Health) Tj ET
+BT /F1 9.5 Tf 72 400 Td (2021 - 2023) Tj ET
+BT /F1 10 Tf 72 384 Td (- Built HIPAA-compliant document-intelligence pipeline \(OCR + NLP\), 100k docs/month.) Tj ET
+BT /F1 10 Tf 72 370 Td (- Designed Flask microservices and PostgreSQL schemas for patient intake flows.) Tj ET
+BT /F1 10 Tf 72 356 Td (- Reduced page load times 55% by migrating the frontend to TypeScript + Vite.) Tj ET
+BT /F2 10.5 Tf 72 330 Td (Backend Engineer, Ferra Analytics) Tj ET
+BT /F1 9.5 Tf 72 316 Td (2019 - 2021) Tj ET
+BT /F1 10 Tf 72 300 Td (- Developed real-time data ingestion \(Kafka + Python\) for marketing analytics.) Tj ET
+BT /F1 10 Tf 72 286 Td (- Introduced CI/CD with automated tests, cutting release cycle from 2 weeks to 2 days.) Tj ET
+0.8 G 0.7 w 72 268 m 540 268 l S
+BT /F2 12 Tf 72 244 Td (SKILLS) Tj ET
+BT /F1 10 Tf 72 224 Td (Languages:  Python, TypeScript, JavaScript, Go, SQL, Bash) Tj ET
+BT /F1 10 Tf 72 208 Td (AI / ML:  PyTorch, TensorFlow, Transformers, LangChain, RAG, scikit-learn) Tj ET
+BT /F1 10 Tf 72 192 Td (Backend:  Flask, FastAPI, Django, PostgreSQL, Redis, Celery, GraphQL) Tj ET
+BT /F1 10 Tf 72 176 Td (Frontend:  React, Tailwind CSS, Three.js, Vite, D3.js) Tj ET
+BT /F1 10 Tf 72 160 Td (Infra:  Docker, Kubernetes, AWS, GCP, Terraform, CI/CD, Linux) Tj ET
+0.8 G 0.7 w 72 144 m 540 144 l S
+BT /F2 12 Tf 72 120 Td (SELECTED PROJECTS) Tj ET
+BT /F1 10 Tf 72 100 Td (- llm-orchestra: multi-provider LLM gateway with failover & cost tracking \(12k+ stars\).) Tj ET
+BT /F1 10 Tf 72 84 Td (- VisionGuard: real-time PPE-compliance computer vision, deployed in 40+ facilities.) Tj ET
+BT /F1 10 Tf 72 68 Td (- DocPilot: RAG documentation assistant with citations, 94% answer accuracy.) Tj ET
+BT /F2 12 Tf 72 44 Td (CERTIFICATIONS) Tj ET
+BT /F1 10 Tf 72 26 Td (AWS Certified ML - Specialty \(2024\) | TensorFlow Developer Certificate \(2023\)) Tj ET
+BT /F1 10 Tf 72 12 Td (CKAD - Certified Kubernetes Application Developer \(2023\)) Tj ET
+endstream
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000360 00000 n 
+trailer
+<< /Size 5 /Root 1 0 R >>
+startxref
+3594
+%%EOF

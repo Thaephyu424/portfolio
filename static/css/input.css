@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
+:root {
+  --c-bg: #0b0f19;
+  --c-surface: #111827;
+  --c-fg: #f9fafb;
+  --c-muted: #9ca3af;
+  --c-accent: #38bdf8;
+  --c-border: #1f2937;
+  --c-accent-soft: rgba(56, 189, 248, 0.12);
+  --c-code: #0b0f19;
+}
+
+.light {
+  --c-bg: #f3f4f6;
+  --c-surface: #ffffff;
+  --c-fg: #111827;
+  --c-muted: #4b5563;
+  --c-accent: #0284c7;
+  --c-border: #e5e7eb;
+  --c-accent-soft: rgba(2, 132, 199, 0.10);
+  --c-code: #111827;
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-fg: var(--c-fg);
+  --color-muted: var(--c-muted);
+  --color-accent: var(--c-accent);
+  --color-border: var(--c-border);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-code: var(--c-code);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--c-accent);
+  color: #0b0f19;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Card hover elevation */
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px -12px rgba(56, 189, 248, 0.25);
+  border-color: var(--c-accent);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--c-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-accent);
+}
+
+/* Section label underline accent */
+.section-label::before {
+  content: "";
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--c-accent);
+  vertical-align: middle;
+  margin-right: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+#hero-canvas {
+  opacity: 0.85;
+}
