@@ -34,6 +34,7 @@ def index():
         profile=data.PROFILE,
         about=data.ABOUT_TEXT,
         highlights=data.HIGHLIGHTS,
+        education=data.EDUCATION,
         projects=data.PROJECTS,
         skills=data.SKILLS,
         experience=data.EXPERIENCE,

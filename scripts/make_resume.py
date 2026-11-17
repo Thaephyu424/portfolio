@@ -1,4 +1,4 @@
-"""Generate static/resume/resume.pdf (zero dependencies, pure Python)."""
+"""Generate static/resume/resume.pdf from CV content (zero dependencies, pure Python)."""
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent.parent / "static" / "resume" / "resume.pdf"
@@ -21,65 +21,64 @@ def line(x1, y1, x2, y2, wd=0.7, gray=0.8):
 content = "\n".join([
     # Accent header bar
     f"0.22 0.74 0.97 rg {W - 72} {H - 60} {-(W - 144)} {36} re f 0 g",
-    text(72, H - 108, 24, "F2", "ALEX RIVERA"),
-    text(72, H - 128, 11, "F1", "Software Engineer & AI Developer  |  San Francisco, CA"),
-    text(72, H - 146, 10, "F1", "hello@alexrivera.dev  |  github.com/alexrivera  |  linkedin.com/in/alexrivera"),
+    text(72, H - 108, 24, "F2", "THAE PHYU SOE"),
+    text(72, H - 128, 11, "F1", "AI & Backend Development  |  Mandalay, Myanmar"),
+    text(72, H - 146, 10, "F1", "thaephyusoe76890@gmail.com  |  +959-752-955-375  |  github.com/Thaephyu424"),
     line(72, H - 162, W - 72, H - 162, 1.2, 0.85),
 
     # Summary
-    text(72, H - 192, 12, "F2", "SUMMARY"),
+    text(72, H - 192, 12, "F2", "PROFESSIONAL SUMMARY"),
     text(72, H - 212, 10, "F1",
-         "Software engineer with 6+ years of experience building production web applications and"),
+         "Final-year Computer Science student specializing in AI, Databases, and Cloud Computing at the University"),
     text(72, H - 226, 10, "F1",
-         "machine learning systems. Specialized in Python/Flask backends, TypeScript frontends,"),
-
+         "of Computer Studies (Mandalay). Strong foundation in Python (Django) and Java (Spring Boot) backend"),
     text(72, H - 240, 10, "F1",
-         "and LLM/RAG pipelines serving millions of daily requests."),
+         "development, data engineering fundamentals, relational database schema design, and system architecture."),
+    text(72, H - 254, 10, "F1",
+         "Applying analytical and programming capabilities in the UIT-CITT AI Internship program."),
 
-    # Experience
-    text(72, H - 274, 12, "F2", "EXPERIENCE"),
-    text(72, H - 294, 10.5, "F2", "Senior Software Engineer - AI Platform, Nexlo Labs"),
-    text(72, H - 308, 9.5, "F1", "2023 - Present"),
-    text(72, H - 324, 10, "F1", "- Lead the AI platform team; shipped an internal LLM gateway used by 200+ engineers."),
-    text(72, H - 338, 10, "F1", "- Cut model inference costs 38% via batching, quantization, and smart routing."),
-    text(72, H - 352, 10, "F1", "- Mentor 4 engineers; own the hiring loop for ML infrastructure roles."),
-
-    text(72, H - 378, 10.5, "F2", "Software Engineer, Cavella Health"),
-    text(72, H - 392, 9.5, "F1", "2021 - 2023"),
-    text(72, H - 408, 10, "F1", "- Built HIPAA-compliant document-intelligence pipeline (OCR + NLP), 100k docs/month."),
-    text(72, H - 422, 10, "F1", "- Designed Flask microservices and PostgreSQL schemas for patient intake flows."),
-    text(72, H - 436, 10, "F1", "- Reduced page load times 55% by migrating the frontend to TypeScript + Vite."),
-
-    text(72, H - 462, 10.5, "F2", "Backend Engineer, Ferra Analytics"),
-    text(72, H - 476, 9.5, "F1", "2019 - 2021"),
-    text(72, H - 492, 10, "F1", "- Developed real-time data ingestion (Kafka + Python) for marketing analytics."),
-    text(72, H - 506, 10, "F1", "- Introduced CI/CD with automated tests, cutting release cycle from 2 weeks to 2 days."),
-    line(72, H - 524, W - 72, H - 524),
-
-    # Skills
-    text(72, H - 548, 12, "F2", "SKILLS"),
-    text(72, H - 568, 10, "F1", "Languages:  Python, TypeScript, JavaScript, Go, SQL, Bash"),
-    text(72, H - 584, 10, "F1", "AI / ML:  PyTorch, TensorFlow, Transformers, LangChain, RAG, scikit-learn"),
-    text(72, H - 600, 10, "F1", "Backend:  Flask, FastAPI, Django, PostgreSQL, Redis, Celery, GraphQL"),
-    text(72, H - 616, 10, "F1", "Frontend:  React, Tailwind CSS, Three.js, Vite, D3.js"),
-    text(72, H - 632, 10, "F1", "Infra:  Docker, Kubernetes, AWS, GCP, Terraform, CI/CD, Linux"),
-    line(72, H - 648, W - 72, H - 648),
-
-    # Projects
-    text(72, H - 672, 12, "F2", "SELECTED PROJECTS"),
-    text(72, H - 692, 10, "F1", "- llm-orchestra: multi-provider LLM gateway with failover & cost tracking (12k+ stars)."),
-    text(72, H - 708, 10, "F1", "- VisionGuard: real-time PPE-compliance computer vision, deployed in 40+ facilities."),
-    text(72, H - 724, 10, "F1", "- DocPilot: RAG documentation assistant with citations, 94% answer accuracy."),
+    # Education
+    text(72, H - 288, 12, "F2", "EDUCATION"),
+    text(72, H - 308, 10.5, "F2", "Bachelor of Computer Science (B.C.Sc.)"),
+    text(72, H - 322, 10, "F1", "University of Computer Studies (Mandalay)  |  2022 - 2027"),
+    text(72, H - 338, 10, "F1", "Majors / Specializations: AI, Database Management, and Cloud Computing"),
 
     # Certifications
-    text(72, H - 748, 12, "F2", "CERTIFICATIONS"),
-    text(72, H - 766, 10, "F1", "AWS Certified ML - Specialty (2024) | TensorFlow Developer Certificate (2023)"),
-    text(72, H - 780, 10, "F1", "CKAD - Certified Kubernetes Application Developer (2023)"),
+    text(72, H - 372, 12, "F2", "CERTIFICATIONS"),
+    text(72, H - 392, 10, "F1", "- Data Engineering (DE Level-1 Certification) - Realistic Infotech Group (RIG)"),
+    text(72, H - 408, 10, "F1", "- Japanese Language Proficiency Test (JLPT N3) - Passed"),
+    line(72, H - 424, W - 72, H - 424),
+
+    # Skills
+    text(72, H - 448, 12, "F2", "TECHNICAL SKILLS"),
+    text(72, H - 468, 10, "F1", "Programming Languages:  Java, JavaScript, PHP, C#, Python"),
+    text(72, H - 484, 10, "F1", "Frameworks & Web:  Django, Spring Boot, HTML, CSS, Tailwind CSS"),
+    text(72, H - 500, 10, "F1", "Databases & Data:  MySQL, Relational Database Design, Data Engineering (DE Level-1 Certified)"),
+    text(72, H - 516, 10, "F1", "Developer Tools:  Git, GitHub, Figma, VS Code, PyCharm, Jupyter Notebook"),
+    text(72, H - 532, 10, "F1", "Languages:  Burmese (Native), English (Intermediate), Japanese (JLPT N3)"),
+    line(72, H - 548, W - 72, H - 548),
+
+    # Experience & Activities
+    text(72, H - 572, 12, "F2", "EXPERIENCE & ACTIVITIES"),
+    text(72, H - 592, 10.5, "F2", "Academic Web & Backend Development - University of Computer Studies (Mandalay)"),
+    text(72, H - 606, 9.5, "F1", "2022 - Present"),
+    text(72, H - 622, 10, "F1", "- Built web applications with HTML, CSS, JavaScript, PHP, Java, and C# through academic projects."),
+    text(72, H - 636, 10, "F1", "- Designed relational database schemas and practiced data engineering fundamentals."),
+    text(72, H - 650, 10, "F1", "- Current focus: Python (Django), advanced backend systems, and system architecture."),
+
+    text(72, H - 676, 10.5, "F2", "Static & Interactive Web Applications - University Project Competition"),
+    text(72, H - 690, 9.5, "F1", "2023"),
+    text(72, H - 706, 10, "F1", "- Collaborated under strict deadlines to build user-centric web applications (HTML/CSS/JavaScript)."),
+    text(72, H - 720, 10, "F1", "- Applied Figma for UX/UI prototyping and layout structure before frontend implementation."),
+    line(72, H - 736, W - 72, H - 736),
+
+    # References
+    text(72, H - 758, 12, "F2", "REFERENCES"),
+    text(72, H - 774, 10, "F1", "University of Computer Studies (Mandalay), Department of Student Affairs - +959-2059604 - www.cumandalay.edu.mm"),
 ])
 
-# Fonts
-f1 = ("Font1", "Helvetica", "Helvetica")
-f2 = ("Font2", "Helvetica-Bold", "Helvetica-Bold")
+f1 = ("F1", "Helvetica", "Helvetica")
+f2 = ("F2", "Helvetica-Bold", "Helvetica-Bold")
 
 objects = [
     "<< /Type /Catalog /Pages 2 0 R >>",

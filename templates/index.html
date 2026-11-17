@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,16 +7,16 @@
   <title>{{ profile.name }} | {{ profile.role }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2338BDF8'/><path d='M9 17l5 5 9-11' stroke='%230B0F19' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237393B3'/><path d='M9 17l5 5 9-11' stroke='%23FFFFFF' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
   <script>
     // Apply saved theme before paint to avoid flash
     (function () {
       try {
-        if (localStorage.getItem("theme") === "light") {
-          document.documentElement.classList.remove("dark");
-          document.documentElement.classList.add("light");
+        if (localStorage.getItem("theme") === "dark") {
+          document.documentElement.classList.remove("light");
+          document.documentElement.classList.add("dark");
         }
       } catch (e) {}
     })();
@@ -24,27 +24,41 @@
 </head>
 <body class="min-h-screen bg-bg text-fg antialiased">
 
+  <!-- Fixed pastel mesh background: cream / baby blue / peach / lavender -->
+  <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+    <div class="blob blob-cream animate-blob-slow -left-32 -top-32 h-[30rem] w-[30rem]"></div>
+    <div class="blob blob-baby animate-blob top-[10%] -right-40 h-[34rem] w-[34rem]"></div>
+    <div class="blob blob-peach animate-blob-slow top-[38%] -left-40 h-[32rem] w-[32rem]"></div>
+    <div class="blob blob-lav animate-blob bottom-[-10%] right-[20%] h-[30rem] w-[30rem]"></div>
+    <div class="blob blob-pink animate-blob-slow top-[60%] left-[30%] h-80 w-80"></div>
+  </div>
+
   <!-- ===== Navigation ===== -->
   <header id="navbar" class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-all duration-300">
     <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-      <a href="#home" class="font-mono text-lg font-semibold tracking-tight">
-        <span class="text-accent">&lt;</span>{{ profile.name.split(' ')[0]|lower }}<span class="text-accent">/&gt;</span>
+      <a href="#home" class="heading-display text-xl font-bold tracking-tight" aria-label="Home">
+        <span class="text-accent">&lt;</span>thae<span class="text-accent">/&gt;</span>
       </a>
 
       <ul class="hidden items-center gap-1 md:flex">
-        {% for item in ["About", "Projects", "Skills", "Experience", "Contact"] %}
+        {% for slug, label, key in [("about", "About", "nav_about"), ("projects", "Projects", "nav_projects"), ("skills", "Skills", "nav_skills"), ("experience", "Experience &amp; Certs", "nav_experience"), ("contact", "Contact", "nav_contact")] %}
         <li>
-          <a href="#{{ item|lower }}"
+          <a href="#{{ slug }}" data-i18n="{{ key }}"
              class="nav-link rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-fg">
-            {{ item if item != "Experience" else "Experience &amp; Certs" }}
+            {{ label }}
           </a>
         </li>
         {% endfor %}
       </ul>
 
       <div class="flex items-center gap-2">
-        <a href="/resume"
-           class="hidden rounded-lg border border-accent/40 bg-accent-soft px-3 py-2 font-mono text-xs font-semibold text-accent transition-colors hover:bg-accent hover:text-bg sm:inline-flex">
+        <!-- Language toggle -->
+        <div class="flex items-center rounded-lg border border-border p-0.5 font-mono text-xs" role="group" aria-label="Language">
+          <button type="button" data-lang="en" class="lang-btn lang-active rounded-md px-2 py-1.5 font-semibold" aria-label="Switch to English">EN</button>
+          <button type="button" data-lang="ja" class="lang-btn rounded-md px-2 py-1.5 font-semibold" aria-label="Switch to Japanese">JP</button>
+        </div>
+        <a href="/CV_ThaePhyuSoe.pdf"
+           class="btn-primary hidden rounded-lg px-3 py-2 font-mono text-xs font-semibold sm:inline-flex" data-i18n="nav_resume">
           Download Resume ↓
         </a>
         <button id="theme-toggle" type="button" aria-label="Toggle dark / light mode"
@@ -68,9 +82,8 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden border-t border-border bg-surface/95 backdrop-blur md:hidden">
       <ul class="space-y-1 px-4 py-4">
-        {% for item in ["About", "Projects", "Skills", "Experience", "Contact"] %}
-        <li><a href="#{{ item|lower }}" class="mobile-link block rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-bg hover:text-fg">
-          {{ item if item != "Experience" else "Experience &amp; Certs" }}</a></li>
+        {% for slug, label, key in [("about", "About", "nav_about"), ("projects", "Projects", "nav_projects"), ("skills", "Skills", "nav_skills"), ("experience", "Experience &amp; Certs", "nav_experience"), ("contact", "Contact", "nav_contact")] %}
+        <li><a href="#{{ slug }}" data-i18n="{{ key }}" class="mobile-link block rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-bg hover:text-fg">{{ label }}</a></li>
         {% endfor %}
         <li><a href="/resume" class="mobile-link mt-2 block rounded-lg bg-accent-soft px-3 py-2 text-center font-mono text-sm font-semibold text-accent">
           Download Resume ↓</a></li>
@@ -80,35 +93,123 @@
 
   <main>
     <!-- ===== Hero ===== -->
-    <section id="home" class="relative flex min-h-screen items-center overflow-hidden">
-      <div id="hero-canvas" class="absolute inset-0"></div>
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg"></div>
+    <section id="home" class="relative overflow-hidden">
+      <div class="blob blob-baby animate-blob -left-24 -top-24 h-96 w-96" aria-hidden="true"></div>
+      <div class="blob blob-cream animate-blob-slow -right-32 top-40 h-[28rem] w-[28rem]" aria-hidden="true"></div>
+      <div class="blob blob-peach animate-blob bottom-10 left-1/3 h-72 w-72" aria-hidden="true"></div>
+        <div class="blob blob-lav animate-blob-slow top-10 right-1/4 h-72 w-72" aria-hidden="true"></div>
 
-      <div class="relative mx-auto w-full max-w-6xl px-4 pt-28 pb-16 sm:px-6">
-        <p class="font-mono text-sm text-accent">Hi, my name is</p>
-        <h1 class="mt-4 text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">{{ profile.name }}.</h1>
-        <h2 class="mt-3 text-2xl font-bold text-muted sm:text-4xl lg:text-5xl">{{ profile.tagline }}</h2>
-        <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          {{ profile.role }} focused on <span class="text-fg">AI systems</span>, <span class="text-fg">backend architecture</span>
-          and <span class="text-fg">polished frontends</span>. Currently turning complex ML research
-          into reliable products.
-        </p>
-        <div class="mt-9 flex flex-wrap items-center gap-4">
-          <a href="#projects" class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-bg shadow-lg shadow-accent/25 transition-transform hover:-translate-y-0.5">
-            View my work
-          </a>
-          <a href="#contact" class="rounded-lg border border-border px-5 py-3 text-sm font-semibold text-fg transition-colors hover:border-accent hover:text-accent">
-            Get in touch
-          </a>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pt-32 pb-24 sm:px-6 lg:grid-cols-2 lg:gap-10">
+        <!-- AI & tech decorations -->
+        <svg class="animate-spin-slow absolute left-[46%] top-28 hidden h-14 w-14 text-accent/30 lg:block" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm9.4 5.6l-2.1-.4a7.6 7.6 0 000-2.4l2.1-.4a.9.9 0 00.7-1.1l-.7-2.4a.9.9 0 00-1.1-.6l-2.1.6a7.7 7.7 0 00-1.7-1.7l.6-2.1a.9.9 0 00-.6-1.1l-2.4-.7a.9.9 0 00-1.1.7l-.4 2.1a7.6 7.6 0 00-2.4 0l-.4-2.1a.9.9 0 00-1.1-.7l-2.4.7a.9.9 0 00-.6 1.1l.6 2.1a7.7 7.7 0 00-1.7 1.7l-2.1-.6a.9.9 0 00-1.1.6l-.7 2.4a.9.9 0 00.7 1.1l2.1.4a7.6 7.6 0 000 2.4l-2.1.4a.9.9 0 00-.7 1.1l.7 2.4a.9.9 0 001.1.6l2.1-.6a7.7 7.7 0 001.7 1.7l-.6 2.1a.9.9 0 00.6 1.1l2.4.7a.9.9 0 001.1-.7l.4-2.1a7.6 7.6 0 002.4 0l.4 2.1a.9.9 0 001.1.7l2.4-.7a.9.9 0 00.6-1.1l-.6-2.1a7.7 7.7 0 001.7-1.7l2.1.6a.9.9 0 001.1-.6l.7-2.4a.9.9 0 00-.7-1.1z"/>
+        </svg>
+        <span class="animate-float absolute right-[8%] top-[16%] hidden font-mono text-2xl font-semibold text-accent/40 lg:block" aria-hidden="true">&lt;/&gt;</span>
+        <span class="animate-float absolute bottom-[18%] left-[4%] hidden font-mono text-xl font-semibold text-accent/30 lg:block" aria-hidden="true" style="animation-delay: 1.4s">{ }</span>
+
+        <!-- Text column -->
+        <div class="reveal visible">
+          <div class="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface px-4 py-2 shadow-soft">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60"></span>
+              <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent"></span>
+            </span>
+            <span class="font-mono text-xs font-medium text-accent-strong sm:text-sm" data-i18n="hero_badge">Open to AI &amp; Software Engineering Internships</span>
+          </div>
+
+          <p class="heading-display text-outline mt-8 select-none text-6xl leading-none sm:text-7xl lg:text-8xl" aria-hidden="true">PORTFOLIO</p>
+
+          <h1 class="heading-display mt-4 text-5xl sm:text-6xl lg:text-7xl">
+            {{ profile.name }}
+          </h1>
+          <p class="heading-display mt-2 text-2xl text-accent sm:text-3xl" data-i18n="hero_role">{{ profile.role }}.</p>
+
+          <p class="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg" data-i18n="hero_sub">
+            {{ profile.tagline }}
+          </p>
+
+          <!-- CTAs -->
+          <div class="mt-9 flex flex-wrap items-center gap-4">
+            <a href="#projects" class="btn-primary px-6 py-3 text-sm font-semibold" data-i18n="cta_projects">
+              View Projects
+            </a>
+            <a href="#contact" class="btn-soft px-6 py-3 text-sm font-semibold" data-i18n="cta_contact">
+              Contact Me
+            </a>
+          </div>
+
+          <!-- Tech stack tags -->
+          <div class="mt-9 flex flex-wrap gap-2.5">
+            {% for tag in ["Django", "Java", "Spring Boot", "Python", "MySQL", "Tailwind CSS"] %}
+            <span class="rounded-full border border-border bg-surface px-3.5 py-1.5 font-mono text-xs text-muted shadow-soft">{{ tag }}</span>
+            {% endfor %}
+          </div>
+
+          <!-- Social icon row -->
+          <div class="mt-9 flex items-center gap-3">
+            <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub"
+               class="rounded-full border border-border bg-surface p-2.5 text-muted shadow-soft transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.9.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05a9.36 9.36 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.5A10.03 10.03 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg>
+            </a>
+            <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+               class="rounded-full border border-border bg-surface p-2.5 text-muted shadow-soft transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.55V9h3.57v11.45z"/></svg>
+            </a>
+            <a href="mailto:{{ profile.email }}" aria-label="Email"
+               class="rounded-full border border-border bg-surface p-2.5 text-muted shadow-soft transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M3 6h18v12H3z"/>
+              </svg>
+            </a>
+            <span class="ml-2 hidden h-px flex-1 bg-border sm:block"></span>
+            <span class="hidden font-mono text-xs text-muted sm:block">{{ profile.email }}</span>
+          </div>
         </div>
-        <div class="mt-12 flex flex-wrap gap-3">
-          {% for tag in ["Flask", "Python", "TypeScript", "PyTorch", "Three.js", "Tailwind"] %}
-          <span class="rounded-md border border-border bg-surface px-3 py-1.5 font-mono text-xs text-muted">{{ tag }}</span>
-          {% endfor %}
+
+        <!-- Avatar column -->
+        <div class="relative mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md reveal visible">
+          <!-- Speech bubble -->
+          <div class="bubble animate-wiggle absolute -top-7 left-2 z-10 inline-flex -rotate-3 items-center gap-2 px-4 py-2.5">
+            <svg class="h-4 w-4 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8z"/></svg>
+            <span class="heading-display text-sm font-bold" data-i18n="hero_wave">Hi, I'm Thae!</span>
+          </div>
+
+          <!-- Twinkling sparks -->
+          <svg class="animate-twinkle absolute -top-4 right-8 h-8 w-8 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8z"/></svg>
+          <svg class="animate-twinkle-delayed absolute top-24 -left-5 h-6 w-6 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8z"/></svg>
+          <svg class="animate-twinkle absolute bottom-16 right-0 h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8z"/></svg>
+          <svg class="animate-twinkle-delayed absolute -bottom-2 left-10 h-4 w-4 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8z"/></svg>
+
+          <div class="relative">
+            <div class="absolute -inset-4 rounded-[2.75rem] bg-accent-soft" aria-hidden="true"></div>
+            <div class="relative overflow-hidden rounded-[2.5rem] border border-border shadow-soft">
+              <img src="{{ url_for('static', filename='img/my-avatar.png') }}" alt="Cute anime-style avatar of {{ profile.name }}"
+                   class="animate-float w-full" width="864" height="1152" />
+            </div>
+            <!-- Friendly AI robot companion -->
+            <svg class="animate-float absolute -bottom-5 -left-7 z-10 h-20 w-20 drop-shadow-lg" viewBox="0 0 64 64" fill="none" aria-hidden="true" style="animation-delay: 0.8s">
+              <line x1="32" y1="7" x2="32" y2="13" stroke="#7393B3" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="32" cy="5" r="3" fill="#F5A9B8"/>
+              <rect x="12" y="13" width="40" height="33" rx="10" fill="#E8F4F8" stroke="#7393B3" stroke-width="2.5"/>
+              <circle cx="25" cy="28" r="3.5" fill="#2C3E50"/>
+              <circle cx="39" cy="28" r="3.5" fill="#2C3E50"/>
+              <circle cx="20.5" cy="33" r="2.2" fill="#FADBD8"/>
+              <circle cx="43.5" cy="33" r="2.2" fill="#FADBD8"/>
+              <path d="M26.5 36.5c2 2.4 9 2.4 11 0" stroke="#2C3E50" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="21" y="50" width="22" height="9" rx="4.5" fill="#7393B3"/>
+              <rect x="8" y="22" width="5" height="12" rx="2.5" fill="#9BB0C1"/>
+              <rect x="51" y="22" width="5" height="12" rx="2.5" fill="#9BB0C1"/>
+            </svg>
+
+            <!-- Rotating star badge -->
+            <div class="animate-spin-slow absolute -right-4 -top-4 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-surface shadow-soft" aria-hidden="true">
+              <svg class="h-6 w-6 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8z"/></svg>
+            </div>
+          </div>
         </div>
       </div>
 
-      <a href="#about" aria-label="Scroll down" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted hover:text-accent">
+      <a href="#about" aria-label="Scroll down" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted transition-colors hover:text-accent">
         <svg class="h-6 w-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7-7-7m14-6l-7 7-7-7"/>
         </svg>
@@ -117,10 +218,10 @@
 
     <!-- ===== About ===== -->
     <section id="about" class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <p class="section-label font-mono text-sm font-semibold text-accent reveal">01. About</p>
+      <p class="section-label font-mono text-sm font-semibold text-accent reveal" data-i18n="about_label">01. About</p>
       <div class="mt-6 grid gap-12 lg:grid-cols-[2fr_1fr]">
         <div class="reveal">
-          <h2 class="text-3xl font-bold sm:text-4xl">Engineer at heart, designer by instinct.</h2>
+          <h2 class="heading-display text-4xl sm:text-5xl" data-i18n="about_title">ABOUT ME</h2>
           <p class="mt-6 leading-relaxed text-muted">{{ about }}</p>
           <ul class="mt-8 space-y-3">
             {% for h in highlights %}
@@ -134,7 +235,7 @@
           </ul>
         </div>
         <div class="reveal">
-          <div class="card-lift rounded-2xl border border-border bg-surface p-6">
+          <div class="card-lift rounded-3xl border border-border bg-surface p-6">
             <p class="font-mono text-xs text-muted">// contact.json</p>
             <pre class="mt-3 overflow-x-auto rounded-lg bg-code p-4 font-mono text-xs leading-6"><code>{
   <span class="text-accent">"name"</span>: <span class="text-fg">"{{ profile.name }}"</span>,
@@ -148,42 +249,113 @@
       </div>
     </section>
 
-    <!-- ===== Projects ===== -->
+
+    <!-- AI divider -->
+    <div class="mx-auto flex max-w-6xl items-center gap-4 px-6" aria-hidden="true">
+      <span class="h-px flex-1 bg-gradient-to-r from-transparent to-border"></span>
+      <svg class="animate-float h-10 w-10" viewBox="0 0 64 64" fill="none">
+        <line x1="32" y1="7" x2="32" y2="13" stroke="#7393B3" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="5" r="3" fill="#F5A9B8"/>
+        <rect x="12" y="13" width="40" height="33" rx="10" fill="#E8F4F8" stroke="#7393B3" stroke-width="2.5"/>
+        <circle cx="25" cy="28" r="3.5" fill="#2C3E50"/>
+        <circle cx="39" cy="28" r="3.5" fill="#2C3E50"/>
+        <path d="M26.5 36.5c2 2.4 9 2.4 11 0" stroke="#2C3E50" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="21" y="50" width="22" height="9" rx="4.5" fill="#7393B3"/>
+      </svg>
+      <span class="font-mono text-sm font-semibold text-accent/50">&lt;/&gt;</span>
+      <svg class="animate-spin-slow h-6 w-6 text-accent/40" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm9.4 5.6l-2.1-.4a7.6 7.6 0 000-2.4l2.1-.4a.9.9 0 00.7-1.1l-.7-2.4a.9.9 0 00-1.1-.6l-2.1.6a7.7 7.7 0 00-1.7-1.7l.6-2.1a.9.9 0 00-.6-1.1l-2.4-.7a.9.9 0 00-1.1.7l-.4 2.1a7.6 7.6 0 00-2.4 0l-.4-2.1a.9.9 0 00-1.1-.7l-2.4.7a.9.9 0 00-.6 1.1l.6 2.1a7.7 7.7 0 00-1.7 1.7l-2.1-.6a.9.9 0 00-1.1.6l-.7 2.4a.9.9 0 00.7 1.1l2.1.4a7.6 7.6 0 000 2.4l-2.1.4a.9.9 0 00-.7 1.1l.7 2.4a.9.9 0 001.1.6l2.1-.6a7.7 7.7 0 001.7 1.7l-.6 2.1a.9.9 0 00.6 1.1l2.4.7a.9.9 0 001.1-.7l.4-2.1a7.6 7.6 0 002.4 0l.4 2.1a.9.9 0 001.1.7l2.4-.7a.9.9 0 00.6-1.1l-.6-2.1a7.7 7.7 0 001.7-1.7l2.1.6a.9.9 0 001.1-.6l.7-2.4a.9.9 0 00-.7-1.1z"/>
+      </svg>
+      <span class="h-px flex-1 bg-gradient-to-l from-transparent to-border"></span>
+    </div>
+
+    <!-- ===== Featured Projects ===== -->
     <section id="projects" class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <p class="section-label font-mono text-sm font-semibold text-accent reveal">02. Projects</p>
-      <h2 class="mt-6 text-3xl font-bold sm:text-4xl reveal">Things I've built.</h2>
-      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <p class="section-label font-mono text-sm font-semibold text-accent reveal" data-i18n="projects_label">02. Projects</p>
+      <h2 class="heading-display mt-6 text-4xl sm:text-5xl reveal" data-i18n="projects_title">PROJECTS</h2>
+
+      <!-- Filter tabs -->
+      <div class="mt-8 flex flex-wrap gap-2 reveal" role="tablist" aria-label="Filter projects">
+        <button type="button" class="filter-btn filter-active" data-filter="all" aria-pressed="true" data-i18n="filter_all">All</button>
+        <button type="button" class="filter-btn" data-filter="web" aria-pressed="false" data-i18n="filter_web">Full-Stack Web</button>
+      </div>
+
+      <!-- 2-column responsive grid -->
+      <div id="projects-grid" class="mt-10 grid gap-6 md:grid-cols-2">
         {% for p in projects %}
-        <article class="card-lift reveal group flex flex-col rounded-2xl border border-border bg-surface p-6">
-          <div class="flex items-center justify-between">
-            <svg class="h-8 w-8 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-            </svg>
-            <a href="{{ p.link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ p.name }} on GitHub"
-               class="text-muted transition-colors hover:text-accent">
+        <article class="project-card card-lift glass reveal group flex flex-col rounded-3xl p-6" data-category="{{ p.cat }}">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span class="font-mono text-[11px] uppercase tracking-wide text-accent/80">{{ p.category }}</span>
+              <h3 class="mt-1.5 text-lg font-semibold leading-snug transition-colors group-hover:text-accent">{{ p.name }}</h3>
+            </div>
+            <a href="{{ p.github }}" target="_blank" rel="noopener noreferrer" aria-label="{{ p.name }} on GitHub"
+               class="shrink-0 text-muted transition-colors hover:text-accent">
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.9.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05a9.36 9.36 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.5A10.03 10.03 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg>
             </a>
           </div>
-          <h3 class="mt-5 text-lg font-semibold group-hover:text-accent">{{ p.name }}</h3>
-          <span class="mt-1 font-mono text-[11px] text-accent/80">{{ p.highlight }}</span>
-          <p class="mt-3 flex-1 text-sm leading-relaxed text-muted">{{ p.description }}</p>
+          <p class="mt-2 text-sm leading-relaxed text-muted">{{ p.summary }}</p>
+
+          <!-- Problem → Approach → Impact -->
+          <div class="mt-5 space-y-3">
+            {% for label, items in [("Problem", p.problem), ("Approach", p.approach), ("Impact", p.impact)] %}
+            <div>
+              <p class="font-mono text-[11px] font-semibold uppercase tracking-wide text-accent" data-i18n="pai_{{ label|lower }}">{{ label }}</p>
+              <ul class="mt-1 space-y-1">
+                {% for it in items %}
+                <li class="flex items-start gap-2 text-xs leading-relaxed text-muted sm:text-sm">
+                  <span class="mt-0.5 font-mono text-accent">›</span><span>{{ it }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Tech stack badges -->
           <ul class="mt-5 flex flex-wrap gap-2">
             {% for t in p.tech %}
             <li class="rounded-md bg-accent-soft px-2 py-1 font-mono text-[11px] text-accent">{{ t }}</li>
             {% endfor %}
           </ul>
+
+          <!-- Action links -->
+          <div class="mt-6 flex flex-wrap items-center gap-2.5 border-t border-border pt-5">
+            <a href="{{ p.live_demo }}" class="btn-primary rounded-lg px-4 py-2 font-mono text-xs font-semibold" data-i18n="demo">Live Demo</a>
+            <a href="{{ p.github }}" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-border px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent hover:text-accent" data-i18n="repo">GitHub Repo</a>
+          </div>
         </article>
         {% endfor %}
       </div>
     </section>
 
+
+    <!-- AI divider -->
+    <div class="mx-auto flex max-w-6xl items-center gap-4 px-6" aria-hidden="true">
+      <span class="h-px flex-1 bg-gradient-to-r from-transparent to-border"></span>
+      <svg class="animate-float h-10 w-10" viewBox="0 0 64 64" fill="none">
+        <line x1="32" y1="7" x2="32" y2="13" stroke="#7393B3" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="5" r="3" fill="#F5A9B8"/>
+        <rect x="12" y="13" width="40" height="33" rx="10" fill="#E8F4F8" stroke="#7393B3" stroke-width="2.5"/>
+        <circle cx="25" cy="28" r="3.5" fill="#2C3E50"/>
+        <circle cx="39" cy="28" r="3.5" fill="#2C3E50"/>
+        <path d="M26.5 36.5c2 2.4 9 2.4 11 0" stroke="#2C3E50" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="21" y="50" width="22" height="9" rx="4.5" fill="#7393B3"/>
+      </svg>
+      <span class="font-mono text-sm font-semibold text-accent/50">&lt;/&gt;</span>
+      <svg class="animate-spin-slow h-6 w-6 text-accent/40" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm9.4 5.6l-2.1-.4a7.6 7.6 0 000-2.4l2.1-.4a.9.9 0 00.7-1.1l-.7-2.4a.9.9 0 00-1.1-.6l-2.1.6a7.7 7.7 0 00-1.7-1.7l.6-2.1a.9.9 0 00-.6-1.1l-2.4-.7a.9.9 0 00-1.1.7l-.4 2.1a7.6 7.6 0 00-2.4 0l-.4-2.1a.9.9 0 00-1.1-.7l-2.4.7a.9.9 0 00-.6 1.1l.6 2.1a7.7 7.7 0 00-1.7 1.7l-2.1-.6a.9.9 0 00-1.1.6l-.7 2.4a.9.9 0 00.7 1.1l2.1.4a7.6 7.6 0 000 2.4l-2.1.4a.9.9 0 00-.7 1.1l.7 2.4a.9.9 0 001.1.6l2.1-.6a7.7 7.7 0 001.7 1.7l-.6 2.1a.9.9 0 00.6 1.1l2.4.7a.9.9 0 001.1-.7l.4-2.1a7.6 7.6 0 002.4 0l.4 2.1a.9.9 0 001.1.7l2.4-.7a.9.9 0 00.6-1.1l-.6-2.1a7.7 7.7 0 001.7-1.7l2.1.6a.9.9 0 001.1-.6l.7-2.4a.9.9 0 00-.7-1.1z"/>
+      </svg>
+      <span class="h-px flex-1 bg-gradient-to-l from-transparent to-border"></span>
+    </div>
+
     <!-- ===== Skills ===== -->
     <section id="skills" class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <p class="section-label font-mono text-sm font-semibold text-accent reveal">03. Skills</p>
-      <h2 class="mt-6 text-3xl font-bold sm:text-4xl reveal">Tools of the trade.</h2>
+      <p class="section-label font-mono text-sm font-semibold text-accent reveal" data-i18n="skills_label">03. Skills</p>
+      <h2 class="heading-display mt-6 text-4xl sm:text-5xl reveal" data-i18n="skills_title">SKILLS &amp; TOOLS</h2>
       <div class="mt-12 grid gap-6 md:grid-cols-2">
         {% for category, items in skills.items() %}
-        <div class="card-lift reveal rounded-2xl border border-border bg-surface p-6">
+        <div class="card-lift glass reveal rounded-3xl p-6">
           <h3 class="flex items-center gap-2 text-base font-semibold">
             <span class="font-mono text-accent">&gt;_</span> {{ category }}
           </h3>
@@ -197,10 +369,30 @@
       </div>
     </section>
 
+
+    <!-- AI divider -->
+    <div class="mx-auto flex max-w-6xl items-center gap-4 px-6" aria-hidden="true">
+      <span class="h-px flex-1 bg-gradient-to-r from-transparent to-border"></span>
+      <svg class="animate-float h-10 w-10" viewBox="0 0 64 64" fill="none">
+        <line x1="32" y1="7" x2="32" y2="13" stroke="#7393B3" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="5" r="3" fill="#F5A9B8"/>
+        <rect x="12" y="13" width="40" height="33" rx="10" fill="#E8F4F8" stroke="#7393B3" stroke-width="2.5"/>
+        <circle cx="25" cy="28" r="3.5" fill="#2C3E50"/>
+        <circle cx="39" cy="28" r="3.5" fill="#2C3E50"/>
+        <path d="M26.5 36.5c2 2.4 9 2.4 11 0" stroke="#2C3E50" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="21" y="50" width="22" height="9" rx="4.5" fill="#7393B3"/>
+      </svg>
+      <span class="font-mono text-sm font-semibold text-accent/50">&lt;/&gt;</span>
+      <svg class="animate-spin-slow h-6 w-6 text-accent/40" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm9.4 5.6l-2.1-.4a7.6 7.6 0 000-2.4l2.1-.4a.9.9 0 00.7-1.1l-.7-2.4a.9.9 0 00-1.1-.6l-2.1.6a7.7 7.7 0 00-1.7-1.7l.6-2.1a.9.9 0 00-.6-1.1l-2.4-.7a.9.9 0 00-1.1.7l-.4 2.1a7.6 7.6 0 00-2.4 0l-.4-2.1a.9.9 0 00-1.1-.7l-2.4.7a.9.9 0 00-.6 1.1l.6 2.1a7.7 7.7 0 00-1.7 1.7l-2.1-.6a.9.9 0 00-1.1.6l-.7 2.4a.9.9 0 00.7 1.1l2.1.4a7.6 7.6 0 000 2.4l-2.1.4a.9.9 0 00-.7 1.1l.7 2.4a.9.9 0 001.1.6l2.1-.6a7.7 7.7 0 001.7 1.7l-.6 2.1a.9.9 0 00.6 1.1l2.4.7a.9.9 0 001.1-.7l.4-2.1a7.6 7.6 0 002.4 0l.4 2.1a.9.9 0 001.1.7l2.4-.7a.9.9 0 00.6-1.1l-.6-2.1a7.7 7.7 0 001.7-1.7l2.1.6a.9.9 0 001.1-.6l.7-2.4a.9.9 0 00-.7-1.1z"/>
+      </svg>
+      <span class="h-px flex-1 bg-gradient-to-l from-transparent to-border"></span>
+    </div>
+
     <!-- ===== Experience & Certifications ===== -->
     <section id="experience" class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <p class="section-label font-mono text-sm font-semibold text-accent reveal">04. Experience &amp; Certifications</p>
-      <h2 class="mt-6 text-3xl font-bold sm:text-4xl reveal">Where I've worked.</h2>
+      <p class="section-label font-mono text-sm font-semibold text-accent reveal" data-i18n="exp_label">04. Experience &amp; Certifications</p>
+      <h2 class="heading-display mt-6 text-4xl sm:text-5xl reveal" data-i18n="exp_title">EXPERIENCE</h2>
 
       <div class="mt-12 grid gap-12 lg:grid-cols-[2fr_1fr]">
         <!-- Timeline -->
@@ -223,8 +415,25 @@
 
         <!-- Certifications -->
         <div class="space-y-4">
+          <div class="card-lift glass reveal rounded-3xl p-5">
+            <div class="flex items-start gap-4">
+              <svg class="mt-0.5 h-6 w-6 shrink-0 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 19.5v-15A2.5 2.5 0 016.5 2H20v20H6.5a2.5 2.5 0 010-5H20"/>
+              </svg>
+              <div>
+                <h3 class="text-sm font-semibold leading-snug">{{ education.degree }}</h3>
+                <p class="mt-1 font-mono text-xs text-muted">{{ education.school }}</p>
+                <p class="mt-1 font-mono text-xs text-muted">{{ education.period }}</p>
+                <ul class="mt-2 flex flex-wrap gap-1.5">
+                  {% for m in education.majors %}
+                  <li class="rounded bg-accent-soft px-2 py-0.5 font-mono text-[11px] text-accent">{{ m }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
           {% for cert in certifications %}
-          <div class="card-lift reveal flex items-start gap-4 rounded-2xl border border-border bg-surface p-5">
+          <div class="card-lift glass reveal flex items-start gap-4 rounded-3xl p-5">
             <svg class="mt-0.5 h-6 w-6 shrink-0 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 15a6 6 0 100-12 6 6 0 000 12zm0 0l-3.5 7L12 19.5 15.5 22 12 15z"/>
             </svg>
@@ -238,13 +447,33 @@
       </div>
     </section>
 
+
+    <!-- AI divider -->
+    <div class="mx-auto flex max-w-6xl items-center gap-4 px-6" aria-hidden="true">
+      <span class="h-px flex-1 bg-gradient-to-r from-transparent to-border"></span>
+      <svg class="animate-float h-10 w-10" viewBox="0 0 64 64" fill="none">
+        <line x1="32" y1="7" x2="32" y2="13" stroke="#7393B3" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="5" r="3" fill="#F5A9B8"/>
+        <rect x="12" y="13" width="40" height="33" rx="10" fill="#E8F4F8" stroke="#7393B3" stroke-width="2.5"/>
+        <circle cx="25" cy="28" r="3.5" fill="#2C3E50"/>
+        <circle cx="39" cy="28" r="3.5" fill="#2C3E50"/>
+        <path d="M26.5 36.5c2 2.4 9 2.4 11 0" stroke="#2C3E50" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="21" y="50" width="22" height="9" rx="4.5" fill="#7393B3"/>
+      </svg>
+      <span class="font-mono text-sm font-semibold text-accent/50">&lt;/&gt;</span>
+      <svg class="animate-spin-slow h-6 w-6 text-accent/40" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm9.4 5.6l-2.1-.4a7.6 7.6 0 000-2.4l2.1-.4a.9.9 0 00.7-1.1l-.7-2.4a.9.9 0 00-1.1-.6l-2.1.6a7.7 7.7 0 00-1.7-1.7l.6-2.1a.9.9 0 00-.6-1.1l-2.4-.7a.9.9 0 00-1.1.7l-.4 2.1a7.6 7.6 0 00-2.4 0l-.4-2.1a.9.9 0 00-1.1-.7l-2.4.7a.9.9 0 00-.6 1.1l.6 2.1a7.7 7.7 0 00-1.7 1.7l-2.1-.6a.9.9 0 00-1.1.6l-.7 2.4a.9.9 0 00.7 1.1l2.1.4a7.6 7.6 0 000 2.4l-2.1.4a.9.9 0 00-.7 1.1l.7 2.4a.9.9 0 001.1.6l2.1-.6a7.7 7.7 0 001.7 1.7l-.6 2.1a.9.9 0 00.6 1.1l2.4.7a.9.9 0 001.1-.7l.4-2.1a7.6 7.6 0 002.4 0l.4 2.1a.9.9 0 001.1.7l2.4-.7a.9.9 0 00.6-1.1l-.6-2.1a7.7 7.7 0 001.7-1.7l2.1.6a.9.9 0 001.1-.6l.7-2.4a.9.9 0 00-.7-1.1z"/>
+      </svg>
+      <span class="h-px flex-1 bg-gradient-to-l from-transparent to-border"></span>
+    </div>
+
     <!-- ===== Contact ===== -->
     <section id="contact" class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <p class="section-label font-mono text-sm font-semibold text-accent reveal">05. Contact</p>
+      <p class="section-label font-mono text-sm font-semibold text-accent reveal" data-i18n="contact_label">05. Contact</p>
       <div class="mt-6 grid gap-12 lg:grid-cols-[1fr_1.2fr]">
         <div class="reveal">
-          <h2 class="text-3xl font-bold sm:text-4xl">Let's build something great.</h2>
-          <p class="mt-5 leading-relaxed text-muted">
+          <h2 class="heading-display text-4xl sm:text-5xl" data-i18n="contact_title">LET'S CONNECT!</h2>
+          <p class="mt-5 leading-relaxed text-muted" data-i18n="contact_desc">
             I'm open to freelance projects, full-time roles, and interesting collaborations.
             Whether you have a question or just want to say hi — my inbox is always open.
           </p>
@@ -254,42 +483,45 @@
               <a href="mailto:{{ profile.email }}" class="text-muted hover:text-accent">{{ profile.email }}</a>
             </li>
             <li class="flex items-center gap-3">
+              <svg class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h2.6a1 1 0 011 .75l.9 3.2a1 1 0 01-.25.97l-1.6 1.6a13 13 0 006.8 6.8l1.6-1.6a1 1 0 01.97-.25l3.2.9a1 1 0 01.75 1V19a2 2 0 01-2 2h-1A15 15 0 013 6V5z"/></svg>
+              <a href="tel:{{ profile.phone|replace(' ', '') }}" class="text-muted hover:text-accent">{{ profile.phone }}</a>
+            </li>
+            <li class="flex items-center gap-3">
               <svg class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17.7 16.7A8 8 0 106.3 7.3m11.4 9.4L19 19M6.3 7.3L5 5m5.5 3.5L12 10"/></svg>
               <span class="text-muted">{{ profile.location }}</span>
             </li>
             <li class="flex flex-wrap gap-3 pt-2">
               <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-border px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent hover:text-accent">GitHub</a>
               <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-border px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent hover:text-accent">LinkedIn</a>
-              <a href="{{ profile.twitter }}" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-border px-4 py-2 font-mono text-xs text-muted transition-colors hover:border-accent hover:text-accent">Twitter</a>
             </li>
           </ul>
         </div>
 
-        <form id="contact-form" class="card-lift reveal rounded-2xl border border-border bg-surface p-6 sm:p-8" novalidate>
+        <form id="contact-form" class="card-lift glass reveal rounded-3xl p-6 sm:p-8" novalidate>
           <div class="grid gap-5 sm:grid-cols-2">
             <div>
-              <label for="name" class="font-mono text-xs text-muted">NAME</label>
+              <label for="name" class="font-mono text-xs text-muted" data-i18n="form_name">NAME</label>
               <input id="name" name="name" type="text" required maxlength="100" autocomplete="name"
-                     class="mt-2 w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent" />
+                     class="mt-2 w-full rounded-lg border border-border bg-white/70 px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent dark:bg-bg/70" />
               <p class="mt-1 hidden text-xs text-red-400" data-error-for="name"></p>
             </div>
             <div>
-              <label for="email" class="font-mono text-xs text-muted">EMAIL</label>
+              <label for="email" class="font-mono text-xs text-muted" data-i18n="form_email">EMAIL</label>
               <input id="email" name="email" type="email" required maxlength="254" autocomplete="email"
-                     class="mt-2 w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent" />
+                     class="mt-2 w-full rounded-lg border border-border bg-white/70 px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent dark:bg-bg/70" />
               <p class="mt-1 hidden text-xs text-red-400" data-error-for="email"></p>
             </div>
           </div>
           <!-- honeypot -->
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
           <div class="mt-5">
-            <label for="message" class="font-mono text-xs text-muted">MESSAGE</label>
+            <label for="message" class="font-mono text-xs text-muted" data-i18n="form_message">MESSAGE</label>
             <textarea id="message" name="message" rows="5" required maxlength="5000"
-                      class="mt-2 w-full resize-y rounded-lg border border-border bg-bg px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent"></textarea>
+                      class="mt-2 w-full resize-y rounded-lg border border-border bg-white/70 px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent dark:bg-bg/70"></textarea>
             <p class="mt-1 hidden text-xs text-red-400" data-error-for="message"></p>
           </div>
           <button type="submit" id="contact-submit"
-                  class="mt-6 w-full rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-bg shadow-lg shadow-accent/20 transition-transform hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-60">
+                  class="btn-primary mt-6 w-full justify-center rounded-lg px-5 py-3 text-sm font-semibold disabled:translate-y-0 disabled:opacity-60" data-i18n="form_send">
             Send message
           </button>
           <p id="form-status" class="mt-4 hidden text-center font-mono text-xs"></p>
@@ -302,16 +534,12 @@
   <footer class="border-t border-border py-10">
     <div class="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-center sm:px-6">
       <p class="font-mono text-xs text-muted">
-        Designed &amp; built with <span class="text-accent">Flask</span> · <span class="text-accent">TypeScript</span> · <span class="text-accent">Tailwind CSS</span> · <span class="text-accent">Three.js</span>
+        Designed &amp; built with <span class="text-accent">Flask</span> · <span class="text-accent">TypeScript</span> · <span class="text-accent">Tailwind CSS</span> — with a soft, cute touch
       </p>
       <p class="font-mono text-xs text-muted">© {{ now().year }} {{ profile.name }} — v1.0.0</p>
     </div>
   </footer>
 
-  <script type="importmap">
-    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
-  </script>
-  <script type="module" src="{{ url_for('static', filename='js/scene.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>
 </html>

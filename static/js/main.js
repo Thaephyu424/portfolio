@@ -1,6 +1,89 @@
 "use strict";
 // UI logic: theme toggle, mobile menu, scrollspy, reveal-on-scroll, contact form.
 const html = document.documentElement;
+const I18N = {
+    nav_about: { en: "About", ja: "自己紹介" },
+    nav_projects: { en: "Projects", ja: "プロジェクト" },
+    nav_skills: { en: "Skills", ja: "スキル" },
+    nav_experience: { en: "Experience & Certs", ja: "経歴・資格" },
+    nav_contact: { en: "Contact", ja: "お問い合わせ" },
+    nav_resume: { en: "Download Resume ↓", ja: "履歴書ダウンロード ↓" },
+    hero_badge: { en: "Open to AI & Software Engineering Internships", ja: "AI・ソフトウェアエンジニアリングインターンシップ募集中" },
+    hero_wave: { en: "Hi, I'm Thae!", ja: "こんにちは、Thaeです！" },
+    hero_sub: {
+        en: "Final-year Computer Science student at the University of Computer Studies (Mandalay), specializing in AI, Databases, and Cloud Computing - building scalable backend systems with Python (Django) and Java (Spring Boot).",
+        ja: "ヤンゴンコンピュータ大学（マンダレー）でAI・データベース・クラウドコンピューティングを専攻する最終学年の学生です。Python（Django）とJava（Spring Boot）によるスケーラブルなバックエンドシステムを構築しています。",
+    },
+    hero_role: { en: "AI & Backend Developer.", ja: "AI・バックエンド開発者。" },
+    cta_projects: { en: "View Projects", ja: "プロジェクトを見る" },
+    cta_contact: { en: "Contact Me", ja: "お問い合わせ" },
+    about_label: { en: "01. About", ja: "01. 自己紹介" },
+    about_title: { en: "ABOUT ME", ja: "自己紹介" },
+    projects_label: { en: "02. Projects", ja: "02. プロジェクト" },
+    projects_title: { en: "PROJECTS", ja: "プロジェクト" },
+    filter_all: { en: "All", ja: "すべて" },
+    filter_web: { en: "Full-Stack Web", ja: "フルスタックWeb" },
+    pai_problem: { en: "Problem", ja: "課題" },
+    pai_approach: { en: "Approach", ja: "手法" },
+    pai_impact: { en: "Impact", ja: "成果" },
+    demo: { en: "Live Demo", ja: "デモ" },
+    repo: { en: "GitHub Repo", ja: "GitHubリポジトリ" },
+    skills_label: { en: "03. Skills", ja: "03. スキル" },
+    skills_title: { en: "SKILLS & TOOLS", ja: "スキル" },
+    exp_label: { en: "04. Experience & Certifications", ja: "04. 経歴・資格" },
+    exp_title: { en: "EXPERIENCE", ja: "経歴・資格" },
+    contact_label: { en: "05. Contact", ja: "05. お問い合わせ" },
+    contact_title: { en: "LET'S CONNECT!", ja: "お問い合わせ" },
+    contact_desc: {
+        en: "I'm currently seeking AI and software engineering internship opportunities. Whether you have an opening, a question, or just want to connect — my inbox is always open.",
+        ja: "現在、AIおよびソフトウェアエンジニアリングのインターンシップの機会を探しています。ご質問やご連絡もお気軽にどうぞ。",
+    },
+    form_name: { en: "NAME", ja: "氏名" },
+    form_email: { en: "EMAIL", ja: "メールアドレス" },
+    form_message: { en: "MESSAGE", ja: "メッセージ" },
+    form_send: { en: "Send message", ja: "送信する" },
+};
+let lang = "en";
+try {
+    lang = localStorage.getItem("lang") === "ja" ? "ja" : "en";
+}
+catch {
+    /* storage unavailable */
+}
+const langBtns = Array.from(document.querySelectorAll(".lang-btn"));
+function applyLang(next) {
+    lang = next;
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        const entry = key ? I18N[key] : undefined;
+        if (entry)
+            el.textContent = entry[next];
+    });
+    document.documentElement.lang = next === "ja" ? "ja" : "en";
+    langBtns.forEach((b) => b.classList.toggle("lang-active", b.dataset.lang === next));
+    try {
+        localStorage.setItem("lang", next);
+    }
+    catch {
+        /* storage unavailable */
+    }
+}
+langBtns.forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang || "en")));
+applyLang(lang);
+/* ---------- Project filtering ---------- */
+const filterBtns = Array.from(document.querySelectorAll(".filter-btn"));
+const projectCards = Array.from(document.querySelectorAll(".project-card"));
+filterBtns.forEach((btn) => btn.addEventListener("click", () => {
+    const f = btn.dataset.filter || "all";
+    filterBtns.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle("filter-active", active);
+        b.setAttribute("aria-pressed", String(active));
+    });
+    projectCards.forEach((card) => {
+        card.classList.toggle("hidden", f !== "all" && card.dataset.category !== f);
+    });
+}));
 /* ---------- Theme toggle ---------- */
 const themeToggle = document.getElementById("theme-toggle");
 function setTheme(mode) {
